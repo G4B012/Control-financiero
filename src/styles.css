@@ -12,12 +12,20 @@
 .label { @apply text-xs font-semibold tracking-wide text-wine2; }
 .input { 
   @apply w-full rounded-xl border border-rose bg-[#fffafa] px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#ff6b6b33] tabular-nums;
-  min-width: 140px;
+  min-width: 150px;
+  padding-right: 14px;     /* para números a la derecha */
+  overflow: hidden;        /* evita que "se salga" visualmente */
+  text-overflow: ellipsis; /* si se pasa, se ve elegante */
+  white-space: nowrap;
 }
 
 .inputSm { 
   @apply w-full rounded-xl border border-rose bg-[#fffafa] px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-[#ff6b6b33] tabular-nums;
-  min-width: 110px;
+  min-width: 120px;
+  padding-right: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .btn { @apply inline-flex items-center justify-center rounded-xl bg-wine px-4 py-2 text-sm font-semibold text-white shadow-soft hover:bg-wine2 transition active:scale-[0.99]; }
 .btnGhost { @apply inline-flex items-center justify-center rounded-xl border border-rose bg-white px-4 py-2 text-sm font-semibold text-wine hover:bg-nude transition active:scale-[0.99]; }
