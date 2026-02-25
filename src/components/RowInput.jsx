@@ -15,7 +15,7 @@ export default function RowInput({ value, onChange, placeholder, type="text", ri
 
   return (
     <input
-      className={(small ? "inputSm" : "input") + (right ? " text-right font-semibold" : "")}
+      className={(small ? "inputSm" : "input") + (right ? " text-right font-semibold tracking-wide pr-2" : "")}
       value={format(value)}
       type="text"
       placeholder={placeholder}
