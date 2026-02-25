@@ -34,7 +34,7 @@ export default function Login({ users, onLogin }){
             </div>
             <div>
               <div className="label mb-1">Clave</div>
-              <input className="input" type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="060625" />
+              <input className="input" type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Ingresa la clave" />
             </div>
             {err && <div className="text-sm text-red-700 font-semibold">{err}</div>}
             <button className="btnRed w-full" type="submit">Entrar</button>
