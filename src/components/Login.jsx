@@ -30,7 +30,7 @@ export default function Login({ users, onLogin }){
           <form onSubmit={submit} className="space-y-3">
             <div>
               <div className="label mb-1">Usuario</div>
-              <input className="input" value={username} onChange={e=>setUsername(e.target.value)} placeholder="Gabriel o Karla" />
+              <input className="input" value={username} onChange={e=>setUsername(e.target.value)} placeholder="Coloque su usuario " />
             </div>
             <div>
               <div className="label mb-1">Clave</div>
