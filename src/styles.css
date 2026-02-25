@@ -11,12 +11,14 @@
 
 .label { @apply text-xs font-semibold tracking-wide text-wine2; }
 .input { 
-  @apply w-full rounded-xl border border-rose bg-[#fffafa] px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#ff6b6b33];
-  min-width: 110px;
-  overflow: visible;
+  @apply w-full rounded-xl border border-rose bg-[#fffafa] px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#ff6b6b33] tabular-nums;
+  min-width: 140px;
 }
-.inputSm { @apply w-full rounded-xl border border-rose bg-[#fffafa] px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-[#ff6b6b33]; }
 
+.inputSm { 
+  @apply w-full rounded-xl border border-rose bg-[#fffafa] px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-[#ff6b6b33] tabular-nums;
+  min-width: 110px;
+}
 .btn { @apply inline-flex items-center justify-center rounded-xl bg-wine px-4 py-2 text-sm font-semibold text-white shadow-soft hover:bg-wine2 transition active:scale-[0.99]; }
 .btnGhost { @apply inline-flex items-center justify-center rounded-xl border border-rose bg-white px-4 py-2 text-sm font-semibold text-wine hover:bg-nude transition active:scale-[0.99]; }
 .btnRed { @apply inline-flex items-center justify-center rounded-xl bg-coral px-4 py-2 text-sm font-extrabold text-white shadow-soft hover:brightness-95 transition active:scale-[0.99]; }
