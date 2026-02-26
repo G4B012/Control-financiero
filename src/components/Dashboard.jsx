@@ -295,7 +295,7 @@ export default function Dashboard({ state, setState, onLogout, onResetUser }) {
 
             <div>
               <div className="label">Ingresos extra</div>
-             <RowInput
+               <RowInput
                 right
                 type="number"
                 value={extraIncomeThisMonth}
