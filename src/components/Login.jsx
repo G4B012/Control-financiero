@@ -40,7 +40,7 @@ export default function Login({ onLogin }) {
         return;
       }
 
-      onLogin({ email: data.user.email });
+      setMsg("Sesión iniciada. Cargando...");
     }
   };
 
