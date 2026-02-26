@@ -1,17 +1,47 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { supabase } from "../lib/supabase";
 
-export default function Login({ users, onLogin }){
-  const [username, setUsername] = useState("");
+export default function Login({ onLogin }) {
+  const [isRegister, setIsRegister] = useState(false);
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
+  const [msg, setMsg] = useState("");
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    const u = users.find(x => x.username === username && x.password === password);
-    if (!u) return setErr("Usuario o clave incorrecta.");
     setErr("");
-    onLogin({ username: u.username });
+    setMsg("");
+
+    if (isRegister) {
+      // REGISTRO
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) {
+        setErr(error.message);
+        return;
+      }
+
+      setMsg("Usuario registrado. Ahora puedes iniciar sesión.");
+      setIsRegister(false);
+    } else {
+      // LOGIN
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        setErr("Correo o contraseña incorrectos.");
+        return;
+      }
+
+      onLogin({ email: data.user.email });
+    }
   };
 
   return (
@@ -23,22 +53,73 @@ export default function Login({ users, onLogin }){
         className="card w-full max-w-md overflow-hidden"
       >
         <div className="cardHeader">
-          <div className="text-wine text-2xl font-extrabold">Control Financiero</div>
-          <div className="text-sm text-wine2 mt-1">Acceso</div>
+          <div className="text-wine text-2xl font-extrabold">
+            Control Financiero
+          </div>
+          <div className="text-sm text-wine2 mt-1">
+            {isRegister ? "Registro" : "Acceso"}
+          </div>
         </div>
+
         <div className="cardBody">
           <form onSubmit={submit} className="space-y-3">
             <div>
-              <div className="label mb-1">Usuario</div>
-              <input className="input" value={username} onChange={e=>setUsername(e.target.value)} placeholder="Coloque su usuario " />
+              <div className="label mb-1">Correo</div>
+              <input
+                className="input"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Coloque su correo"
+              />
             </div>
+
             <div>
               <div className="label mb-1">Clave</div>
-              <input className="input" type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Ingresa la clave" />
+              <input
+                className="input"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Ingresa la clave"
+              />
             </div>
-            {err && <div className="text-sm text-red-700 font-semibold">{err}</div>}
-            <button className="btnRed w-full" type="submit">Entrar</button>
+
+            {err && (
+              <div className="text-sm text-red-700 font-semibold">{err}</div>
+            )}
+
+            {msg && (
+              <div className="text-sm text-green-700 font-semibold">{msg}</div>
+            )}
+
+            <button className="btnRed w-full" type="submit">
+              {isRegister ? "Registrarse" : "Entrar"}
+            </button>
           </form>
+
+          <div className="text-center mt-4 text-sm">
+            {isRegister ? (
+              <span>
+                ¿Ya tienes cuenta?{" "}
+                <button
+                  onClick={() => setIsRegister(false)}
+                  className="text-red-600 font-semibold"
+                >
+                  Inicia sesión
+                </button>
+              </span>
+            ) : (
+              <span>
+                ¿No tienes cuenta?{" "}
+                <button
+                  onClick={() => setIsRegister(true)}
+                  className="text-red-600 font-semibold"
+                >
+                  Regístrate
+                </button>
+              </span>
+            )}
+          </div>
         </div>
       </motion.div>
     </div>
