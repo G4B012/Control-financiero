@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { supabase } from "../lib/supabase";
+import supabase  from "../lib/supabase";
 
 export default function Login({ onLogin }) {
   const [isRegister, setIsRegister] = useState(false);
