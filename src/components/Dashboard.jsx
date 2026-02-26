@@ -17,10 +17,18 @@ function sortByDateAsc(a, b) {
 }
 
 export default function Dashboard({ state, setState, onLogout, onResetUser }) {
+  if (!state) {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      Cargando...
+    </div>
+  );
+}
   const currency = state?.currency || "RD$";
   const months = useMemo(() => monthsWindow(6).sort(ymCompare), []);
   const month = state.selectedMonth;
   const now = new Date();
+  
 
   const seededRef = useRef(new Set());
   useEffect(() => {
