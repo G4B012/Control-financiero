@@ -17,7 +17,7 @@ function sortByDateAsc(a, b) {
 }
 
 export default function Dashboard({ state, setState, onLogout, onResetUser }) {
-  const currency = state.currency || "RD$";
+  const currency = state?.currency || "RD$";
   const months = useMemo(() => monthsWindow(6).sort(ymCompare), []);
   const month = state.selectedMonth;
   const now = new Date();
