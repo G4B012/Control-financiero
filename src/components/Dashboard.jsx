@@ -148,26 +148,15 @@ export default function Dashboard({ state, setState, onLogout, onResetUser }) {
     const list = state.expenses.filter(
       (r) => r.month === month && r.type === type
     );
-    return [
-      ...list,
-      { id: null, month, type, category: "", budget: "", amount: "", note: "" },
-    ];
+    return [...list, { id: null, month, type, category: "", budget: "", amount: "" }];
   };
 
   const upsertExpense = (type, idx, patch) => {
     setState((s) => {
       const rows = s.expenses.slice();
       const list = rows.filter((r) => r.month === month && r.type === type);
-      const row =
-        list[idx] || {
-          id: newId(),
-          month,
-          type,
-          category: "",
-          budget: "",
-          amount: "",
-          note: "",
-        };
+     const row =
+  list[idx] || { id: newId(), month, type, category: "", budget: "", amount: "" };
       const updated = { ...row, ...patch };
 
       const masterIdx = rows.findIndex((r) => r.id === updated.id);
@@ -237,7 +226,7 @@ export default function Dashboard({ state, setState, onLogout, onResetUser }) {
       ...s,
       expenses: [
         ...s.expenses,
-        { id: newId(), month, type, category: "", budget: "", amount: "", note: "" },
+        { id: newId(), month, type, category: "", budget: "", amount: "" },
       ],
     }));
   };
@@ -658,246 +647,213 @@ export default function Dashboard({ state, setState, onLogout, onResetUser }) {
           </div>
         </div>
 
-        {/* Fixed center */}
-        <div className="card lg:col-span-4">
-          <div className="cardHeader flex items-start justify-between">
-            <div>
-              <div className="text-wine2 font-extrabold text-lg">❤️ Gastos fijos</div>
-            </div>
-            <span className="pillFixed">FIJOS</span>
-          </div>
+       {/* Fijos */}
+<div className="card lg:col-span-4">
+  <div className="cardHeader flex items-start justify-between">
+    <div>
+      <div className="text-wine2 font-extrabold text-lg">❤️ Gastos fijos</div>
+    </div>
+    <span className="pillFixed">FIJOS</span>
+  </div>
 
-          <div className="cardBody space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="badge">
-                Presupuesto: {money(fixedTotalBudget, currency)}
-              </div>
-              <div className="badge">
-                Real: {money(fixedTotalActual, currency)}{" "}
-                {semaforo(fixedTotalBudget, fixedTotalActual)}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-12 gap-2 text-[11px] font-extrabold text-wine2">
-              <div className="col-span-4">Categoría</div>
-              <div className="col-span-3 text-right">Presup.</div>
-              <div className="col-span-3 text-right">Monto</div>
-              <div className="col-span-2">Nota</div>
-            </div>
-
-            <div className="space-y-2">
-              {rowsFor("fixed").map((r, idx) => (
-                <div key={r.id || idx} className={"rowCard " + (r.id ? "pop-in" : "")}>
-                  <div className="grid grid-cols-12 gap-2 items-center">
-                    <div className="col-span-4">
-                      <select
-                        className="input"
-                        value={r.category}
-                        onChange={(e) =>
-                          upsertExpense("fixed", idx, {
-                            id: r.id || newId(),
-                            category: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="">Elige…</option>
-                        {CATEGORIES.fixed.map((c) => (
-                          <option key={c} value={c}>
-                            {c}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="col-span-3">
-                      <RowInput
-                        right
-                        type="number"
-                        value={r.budget}
-                        onChange={(v) =>
-                          upsertExpense("fixed", idx, {
-                            id: r.id || newId(),
-                            budget: v,
-                          })
-                        }
-                        placeholder="0"
-                      />
-                    </div>
-
-                    <div className="col-span-3">
-                      <RowInput
-                        right
-                        type="number"
-                        value={r.amount}
-                        onChange={(v) =>
-                          upsertExpense("fixed", idx, {
-                            id: r.id || newId(),
-                            amount: v,
-                          })
-                        }
-                        placeholder="0"
-                      />
-                    </div>
-
-                    <div className="col-span-2 flex items-center gap-2">
-                      <RowInput
-                        small
-                        value={r.note}
-                        onChange={(v) =>
-                          upsertExpense("fixed", idx, {
-                            id: r.id || newId(),
-                            note: v,
-                          })
-                        }
-                        placeholder="Nota"
-                      />
-                      <span className="text-lg">
-                        {semaforo(Number(r.budget || 0), Number(r.amount || 0))}
-                      </span>
-                      {r.id ? (
-                        <button
-                          className="btnGhost px-2"
-                          onClick={() => removeExpense(r.id)}
-                        >
-                          ✕
-                        </button>
-                      ) : (
-                        <span className="text-wine2/30">—</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <button className="btnGhost w-full" onClick={() => addExpenseRow("fixed")}>
-              + agregar fila
-            </button>
-          </div>
-        </div>
-
-        {/* Variable right */}
-        <div className="card lg:col-span-4">
-          <div className="cardHeader flex items-start justify-between">
-            <div>
-              <div className="text-wine2 font-extrabold text-lg">🧡 Gastos variables</div>
-            </div>
-            <span className="pillVar">VAR</span>
-          </div>
-
-          <div className="cardBody space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="badge">
-                Presupuesto: {money(varTotalBudget, currency)}
-              </div>
-              <div className="badge">
-                Real: {money(varTotalActual, currency)}{" "}
-                {semaforo(varTotalBudget, varTotalActual)}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-12 gap-2 text-[11px] font-extrabold text-wine2">
-              <div className="col-span-4">Categoría</div>
-              <div className="col-span-3 text-right">Presup.</div>
-              <div className="col-span-3 text-right">Monto</div>
-              <div className="col-span-2">Nota</div>
-            </div>
-
-            <div className="space-y-2">
-              {rowsFor("variable").map((r, idx) => (
-                <div key={r.id || idx} className={"rowCard " + (r.id ? "pop-in" : "")}>
-                  <div className="grid grid-cols-12 gap-2 items-center">
-                    <div className="col-span-4">
-                      <select
-                        className="input"
-                        value={r.category}
-                        onChange={(e) =>
-                          upsertExpense("variable", idx, {
-                            id: r.id || newId(),
-                            category: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="">Elige…</option>
-                        {CATEGORIES.variable.map((c) => (
-                          <option key={c} value={c}>
-                            {c}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="col-span-3">
-                      <RowInput
-                        right
-                        type="number"
-                        value={r.budget}
-                        onChange={(v) =>
-                          upsertExpense("variable", idx, {
-                            id: r.id || newId(),
-                            budget: v,
-                          })
-                        }
-                        placeholder="0"
-                      />
-                    </div>
-
-                    <div className="col-span-3">
-                      <RowInput
-                        right
-                        type="number"
-                        value={r.amount}
-                        onChange={(v) =>
-                          upsertExpense("variable", idx, {
-                            id: r.id || newId(),
-                            amount: v,
-                          })
-                        }
-                        placeholder="0"
-                      />
-                    </div>
-
-                    <div className="col-span-2 flex items-center gap-2">
-                      <RowInput
-                        small
-                        value={r.note}
-                        onChange={(v) =>
-                          upsertExpense("variable", idx, {
-                            id: r.id || newId(),
-                            note: v,
-                          })
-                        }
-                        placeholder="Nota"
-                      />
-                      <span className="text-lg">
-                        {semaforo(Number(r.budget || 0), Number(r.amount || 0))}
-                      </span>
-                      {r.id ? (
-                        <button
-                          className="btnGhost px-2"
-                          onClick={() => removeExpense(r.id)}
-                        >
-                          ✕
-                        </button>
-                      ) : (
-                        <span className="text-wine2/30">—</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <button
-              className="btnGhost w-full"
-              onClick={() => addExpenseRow("variable")}
-            >
-              + agregar fila
-            </button>
-          </div>
-        </div>
+  <div className="cardBody space-y-3">
+    <div className="flex items-center justify-between">
+      <div className="badge">Presupuesto: {money(fixedTotalBudget, currency)}</div>
+      <div className="badge">
+        Real: {money(fixedTotalActual, currency)} {semaforo(fixedTotalBudget, fixedTotalActual)}
       </div>
+    </div>
 
+    {/* Header columnas SIN nota */}
+    <div className="grid grid-cols-12 gap-2 text-[11px] font-extrabold text-wine2">
+      <div className="col-span-6">Categoría</div>
+      <div className="col-span-2 text-right">Presup.</div>
+      <div className="col-span-2 text-right">Monto</div>
+      <div className="col-span-1 text-center">🚦</div>
+      <div className="col-span-1 text-center">✕</div>
+    </div>
+
+    <div className="space-y-2">
+      {rowsFor("fixed").map((r, idx) => (
+        <div key={r.id || idx} className={"rowCard " + (r.id ? "pop-in" : "")}>
+          <div className="grid grid-cols-12 gap-2 items-center">
+            <div className="col-span-6">
+              <select
+                className="input"
+                value={r.category}
+                onChange={(e) =>
+                  upsertExpense("fixed", idx, {
+                    id: r.id || newId(),
+                    category: e.target.value,
+                  })
+                }
+              >
+                <option value="">Elige…</option>
+                {CATEGORIES.fixed.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="col-span-2">
+              <RowInput
+                right
+                type="number"
+                value={r.budget}
+                onChange={(v) =>
+                  upsertExpense("fixed", idx, {
+                    id: r.id || newId(),
+                    budget: v,
+                  })
+                }
+                placeholder="0"
+              />
+            </div>
+
+            <div className="col-span-2">
+              <RowInput
+                right
+                type="number"
+                value={r.amount}
+                onChange={(v) =>
+                  upsertExpense("fixed", idx, {
+                    id: r.id || newId(),
+                    amount: v,
+                  })
+                }
+                placeholder="0"
+              />
+            </div>
+
+            <div className="col-span-1 text-center text-lg">
+              {semaforo(Number(r.budget || 0), Number(r.amount || 0))}
+            </div>
+
+            <div className="col-span-1 text-center">
+              {r.id ? (
+                <button className="btnGhost px-2" onClick={() => removeExpense(r.id)}>
+                  ✕
+                </button>
+              ) : (
+                <span className="text-wine2/30">—</span>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <button className="btnGhost w-full" onClick={() => addExpenseRow("fixed")}>
+      + agregar fila
+    </button>
+  </div>
+</div>
+
+       {/* Variables */}
+<div className="card lg:col-span-4">
+  <div className="cardHeader flex items-start justify-between">
+    <div>
+      <div className="text-wine2 font-extrabold text-lg">🧡 Gastos variables</div>
+    </div>
+    <span className="pillVar">VAR</span>
+  </div>
+
+  <div className="cardBody space-y-3">
+    <div className="flex items-center justify-between">
+      <div className="badge">Presupuesto: {money(varTotalBudget, currency)}</div>
+      <div className="badge">
+        Real: {money(varTotalActual, currency)} {semaforo(varTotalBudget, varTotalActual)}
+      </div>
+    </div>
+
+    {/* Header columnas SIN nota */}
+    <div className="grid grid-cols-12 gap-2 text-[11px] font-extrabold text-wine2">
+      <div className="col-span-6">Categoría</div>
+      <div className="col-span-2 text-right">Presup.</div>
+      <div className="col-span-2 text-right">Monto</div>
+      <div className="col-span-1 text-center">🚦</div>
+      <div className="col-span-1 text-center">✕</div>
+    </div>
+
+    <div className="space-y-2">
+      {rowsFor("variable").map((r, idx) => (
+        <div key={r.id || idx} className={"rowCard " + (r.id ? "pop-in" : "")}>
+          <div className="grid grid-cols-12 gap-2 items-center">
+            <div className="col-span-6">
+              <select
+                className="input"
+                value={r.category}
+                onChange={(e) =>
+                  upsertExpense("variable", idx, {
+                    id: r.id || newId(),
+                    category: e.target.value,
+                  })
+                }
+              >
+                <option value="">Elige…</option>
+                {CATEGORIES.variable.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="col-span-2">
+              <RowInput
+                right
+                type="number"
+                value={r.budget}
+                onChange={(v) =>
+                  upsertExpense("variable", idx, {
+                    id: r.id || newId(),
+                    budget: v,
+                  })
+                }
+                placeholder="0"
+              />
+            </div>
+
+            <div className="col-span-2">
+              <RowInput
+                right
+                type="number"
+                value={r.amount}
+                onChange={(v) =>
+                  upsertExpense("variable", idx, {
+                    id: r.id || newId(),
+                    amount: v,
+                  })
+                }
+                placeholder="0"
+              />
+            </div>
+
+            <div className="col-span-1 text-center text-lg">
+              {semaforo(Number(r.budget || 0), Number(r.amount || 0))}
+            </div>
+
+            <div className="col-span-1 text-center">
+              {r.id ? (
+                <button className="btnGhost px-2" onClick={() => removeExpense(r.id)}>
+                  ✕
+                </button>
+              ) : (
+                <span className="text-wine2/30">—</span>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <button className="btnGhost w-full" onClick={() => addExpenseRow("variable")}>
+      + agregar fila
+    </button>
+  </div>
+</div>
       {/* BOTTOM: debt right */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mt-4">
         <div className="lg:col-span-8" />
@@ -974,7 +930,7 @@ export default function Dashboard({ state, setState, onLogout, onResetUser }) {
                     month,
                     date: "",
                     amount: "",
-                    note: "",
+              
                   })
                 }
               >
