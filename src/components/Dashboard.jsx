@@ -750,6 +750,7 @@ export default function Dashboard({ state, setState, onLogout, onResetUser }) {
     </button>
   </div>
 </div>
+        
 
        {/* Variables */}
 <div className="card lg:col-span-4">
