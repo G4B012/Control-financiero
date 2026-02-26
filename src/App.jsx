@@ -7,6 +7,7 @@ import Dashboard from "./components/Dashboard";
 function defaultStateFor(email) {
   const now = new Date();
   const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+
   return {
     user: email || "Usuario",
     currency: "RD$",
@@ -16,8 +17,9 @@ function defaultStateFor(email) {
     templates: { fixed: [], variable: [] },
     savings: [],
     debtPayments: [],
-    goal: { name: "Meta de ahorro", target: 550000 },
+    goal: { name: "", target: "" },
     debt: { name: "", total: 0 },
+    extraIncome: 0,
   };
 }
 
