@@ -29,6 +29,19 @@ export default function Dashboard({ state, setState, onLogout, onResetUser }) {
   const months = useMemo(() => monthsWindow(6).sort(ymCompare), []);
   const month = state.selectedMonth;
   const now = new Date();
+  // Extra por mes (para que NO afecte meses anteriores/siguientes)
+  const extraIncomeRaw = state.extraIncomeByMonth?.[month] ?? "";
+  const extraIncomeNum = Number(extraIncomeRaw || 0);
+
+  const setExtraIncomeForMonth = (v) => {
+    setState((s) => ({
+      ...s,
+      extraIncomeByMonth: {
+        ...(s.extraIncomeByMonth || {}),
+        [month]: v === "" ? "" : Number(v),
+      },
+    }));
+  };
 
   // Seed budgets into a new month automatically (templates) if month has no expenses yet
   const seededRef = useRef(new Set());
@@ -295,14 +308,14 @@ export default function Dashboard({ state, setState, onLogout, onResetUser }) {
 
             <div>
               <div className="label">Ingresos extra</div>
-               <RowInput
-                right
-                type="number"
-                value={extraIncomeThisMonth}
-                onChange={(v) => setExtraIncomeThisMonth(v)}
-                placeholder="Ej: 15000"
-              />
-            </div>
+              <RowInput
+                  right
+                  type="number"
+                  value={extraIncomeRaw}
+                  onChange={(v) => setExtraIncomeForMonth(v)}
+                  placeholder="Ej: 15000"
+                />
+              </div>
 
             <div className="rowCard">
               <div className="label">Ingreso total</div>
