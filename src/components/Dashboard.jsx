@@ -88,7 +88,8 @@ export default function Dashboard({ state, setState, onLogout, onResetUser }) {
   const debtMonthTotal = sum(debtMonth, (p) => Number(p.amount || 0));
   const debtPaidTotal = sum(state.debtPayments, (p) => Number(p.amount || 0));
 
-  const balance = Number(state.salary || 0) - expenseTotal - savingsMonthTotal - debtMonthTotal;
+ const totalIncome = Number(state.salary || 0) + Number(state.extraIncome || 0);
+ const balance = totalIncome - expenseTotal - savingsMonthTotal - debtMonthTotal;
 
   const prev = prevMonth(month);
   const prevExp = sum(
@@ -108,9 +109,11 @@ export default function Dashboard({ state, setState, onLogout, onResetUser }) {
   const budgetTotal = fixedTotalBudget + varTotalBudget;
   const budgetOk = budgetTotal > 0 ? expenseTotal <= budgetTotal : null;
 
-  const goalName = state.goal?.name || "Meta de ahorro";
-  const goalTarget = Number(state.goal?.target || 550000);
-  const goalPct = goalTarget ? savingsTotal / goalTarget : 0;
+  const goalName = (state.goal?.name ?? "").trim() || "Meta de ahorro";
+
+const goalTargetRaw = state.goal?.target ?? "";
+const goalTargetNum = Number(goalTargetRaw || 0);
+  const goalPct = goalTargetNum > 0 ? (savingsTotal / goalTargetNum) : 0;
 
   const debtTotal = Number(state.debt?.total || 0);
   const debtPct = debtTotal ? debtPaidTotal / debtTotal : 0;
@@ -236,13 +239,44 @@ export default function Dashboard({ state, setState, onLogout, onResetUser }) {
           <div className="cardHeader flex items-center justify-between">
             <div>
               <div className="label">Salario mensual</div>
-              <div className="text-wine text-2xl font-extrabold mt-1">{money(state.salary, currency)}</div>
+              <div className="text-wine text-2xl font-extrabold mt-1">{money(totalIncome, currency)}
             </div>
             <span className="pillFixed">🎯</span>
           </div>
-          <div className="cardBody">
-            <RowInput className="text-right" value={state.salary} onChange={(v) => setState((s) => ({ ...s, salary: Number(v || 0) }))} placeholder="Ej: 200000" type="number" />
-          </div>
+          <div className="cardBody space-y-2">
+  <div>
+    <div className="label">Salario base</div>
+    <RowInput
+      right
+      type="number"
+      value={state.salary}
+      onChange={(v) =>
+        setState((s) => ({ ...s, salary: Number(v || 0) }))
+      }
+      placeholder="Ej: 200000"
+    />
+  </div>
+
+  <div>
+    <div className="label">Ingresos extra</div>
+    <RowInput
+      right
+      type="number"
+      value={state.extraIncome ?? 0}
+      onChange={(v) =>
+        setState((s) => ({ ...s, extraIncome: Number(v || 0) }))
+      }
+      placeholder="Ej: 15000"
+    />
+  </div>
+
+  <div className="rowCard">
+    <div className="label">Ingreso total</div>
+    <div className="text-wine text-xl font-extrabold mt-1">
+      {money(totalIncome, currency)}
+    </div>
+  </div>
+</div>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.05 }} className="card lg:col-span-3">
@@ -337,8 +371,18 @@ export default function Dashboard({ state, setState, onLogout, onResetUser }) {
               </div>
               <div className="col-span-5">
                 <div className="label">Meta</div>
-                <RowInput className="text-right" type="number" value={goalTarget} onChange={(v) => setState((s) => ({ ...s, goal: { ...s.goal, target: Number(v || 0) } }))} placeholder="550000" />
-              </div>
+               <RowInput
+                  right
+                  type="number"
+                  value={goalTargetRaw}
+                  onChange={(v) =>
+                    setState((s) => ({
+                      ...s,
+                      goal: { ...s.goal, target: v === "" ? "" : Number(v) },
+                    }))
+                  }
+                  placeholder="Ej: 550000"
+                />
             </div>
 
             <div className="grid grid-cols-2 gap-2">
@@ -357,7 +401,7 @@ export default function Dashboard({ state, setState, onLogout, onResetUser }) {
                 <span>Progreso</span><span>{(goalPct * 100).toFixed(1)}%</span>
               </div>
               <ProgressBar value={goalPct} colorClass="bg-mint" />
-              <div className="text-xs text-wine2/70">Restante: {money(Math.max(0, goalTarget - savingsTotal), currency)}</div>
+              <div className="text-xs text-wine2/70">Restante: {money(Math.max(0, goalTargetNum - savingsTotal), currency)}</div>
             </div>
 
             <div className="flex items-center justify-between">
