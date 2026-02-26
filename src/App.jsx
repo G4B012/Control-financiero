@@ -13,13 +13,14 @@ function defaultStateFor(email) {
     currency: "RD$",
     salary: 0,
     selectedMonth: ym,
+    extraIncomes: [],
     expenses: [],
     templates: { fixed: [], variable: [] },
     savings: [],
     debtPayments: [],
     goal: { name: "", target: "" },
     debt: { name: "", total: 0 },
-    extraIncome: 0,
+    
   };
 }
 
