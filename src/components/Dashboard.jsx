@@ -94,7 +94,7 @@ export default function Dashboard({ state, setState, onLogout, onResetUser }) {
   const debtMonthTotal = sum(debtMonth, (p) => Number(p.amount || 0));
   const debtPaidTotal = sum(state.debtPayments, (p) => Number(p.amount || 0));
 
-  const totalIncome = Number(state.salary || 0) + Number(state.extraIncome || 0);
+  const totalIncome = Number(state.salary || 0) + Number(extraIncomeThisMonth || 0);
   const balance = totalIncome - expenseTotal - savingsMonthTotal - debtMonthTotal;
 
   const prev = prevMonth(month);
@@ -233,6 +233,23 @@ export default function Dashboard({ state, setState, onLogout, onResetUser }) {
     .slice()
     .sort((a, b) => (b.month + (b.date || "")).localeCompare(a.month + (a.date || "")))
     .slice(0, 8);
+    const extraIncomeThisMonth = useMemo(() => {
+    const row = (state.extraIncomes || []).find((x) => x.month === month);
+    return row ? Number(row.amount || 0) : 0;
+  }, [state.extraIncomes, month]);
+
+  const setExtraIncomeThisMonth = (amount) => {
+    setState((s) => {
+      const list = (s.extraIncomes || []).slice();
+      const idx = list.findIndex((x) => x.month === month);
+      const nextRow = { month, amount: Number(amount || 0) };
+
+      if (idx >= 0) list[idx] = nextRow;
+      else list.push(nextRow);
+
+      return { ...s, extraIncomes: list };
+    });
+  };
 
   return (
     <div className="min-h-screen p-5 md:p-8 bg-gradient-to-br from-[#fff4f4] via-white to-[#fff0ef]">
@@ -278,11 +295,11 @@ export default function Dashboard({ state, setState, onLogout, onResetUser }) {
 
             <div>
               <div className="label">Ingresos extra</div>
-              <RowInput
+             <RowInput
                 right
                 type="number"
-                value={state.extraIncome ?? 0}
-                onChange={(v) => setState((s) => ({ ...s, extraIncome: Number(v || 0) }))}
+                value={extraIncomeThisMonth}
+                onChange={(v) => setExtraIncomeThisMonth(v)}
                 placeholder="Ej: 15000"
               />
             </div>
